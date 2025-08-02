@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Music Search</title>
+</head>
+<body style="background-color: bisque;">
+    <h1>Jio Savaan Lite</h1>
+    <input type="text" id="searchInput" placeholder="Enter artist or song">
+    <button onclick="searchMusic()" style="margin-top: 10px;">Search</button>
+    <div id="results"></div>
+
+    <script>
+        function searchMusic() {
+            const query = document.getElementById('searchInput').value;
+            const url = `https://itunes.apple.com/search?term=${encodeURIComponent(query)}&limit=5`;
+
+            fetch(url)
+                .then(res => res.json())
+                .then(data => {
+                    const results = data.results.map(track => `
+                        <div>
+                            <p><strong>${track.trackName}</strong> by ${track.artistName}</p>
+                            <audio controls src="${track.previewUrl}"></audio>
+                        </div>
+                    `).join('');
+                    document.getElementById('results').innerHTML = results;
+                })
+                .catch(err => {
+                    document.getElementById('results').innerText = 'Error fetching music: ' + err;
+                });
+        }
+    </script>
+</body>
+</html>
